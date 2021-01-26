@@ -20,24 +20,35 @@
       <section id="monster" class="container">
         <h2>Monster Health</h2>
         <div class="healthbar">
-          <div class="healthbar__value"></div>
+          <div class="healthbar__value" :style="monsterBarStyle"></div>
         </div>
       </section>
       <section id="player" class="container">
         <h2>Your Health</h2>
         <div class="healthbar">
-          <div class="healthbar__value"></div>
+          <div class="healthbar__value" :style="playerBarStyle"></div>
         </div>
       </section>
       <section id="controls">
-        <button>ATTACK</button>
-        <button>SPECIAL ATTACK</button>
-        <button>HEAL</button>
-        <button>SURRENDER</button>
+        <h2>Round : {{ actualRound }}</h2>
+        <section class="container" v-if="gameStatus">
+          <h2 v-if="gameStatus === 'lost'">You lose!</h2>
+          <h2 v-else-if="gameStatus === 'won'">You won!</h2>
+          <h2 v-else>It's a draw!</h2>
+          <button @click="reloadGame">Reload</button>
+        </section>
+        <button @click="playerAttack">ATTACK</button>
+        <button @click="specialAttack" :disabled="disableSpecialAttack">SPECIAL ATTACK</button>
+        <button @click="playerHeal">HEAL</button>
+        <button @click="surrenderGame">SURRENDER</button>
       </section>
       <section id="log" class="container">
         <h2>Battle Log</h2>
-        <ul></ul>
+        <ul v-for="log in roundLogs">
+          <span :class="{'log--player': log.who === 'player', 'log--monster': log.who === 'monster'}"> {{ log.who }} -</span>
+          <span :class="{'log--damage': log.what === 'attack' || log.what === 'spe', 'log--heal': log.what === 'heal'}">- {{ log.what }} -</span>  
+          <span>- {{ log.value }} </span> 
+        </ul>
       </section>
     </div>
   </body>
