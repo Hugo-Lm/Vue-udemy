@@ -7,10 +7,14 @@
 
 <script>
 import TheHeader from './components/nav/TheHeader.vue';
+
 export default {
   components: {
     TheHeader
-  }
+  },
+  beforeMount() {
+    this.$store.dispatch('fetchCoaches')
+  },
 };
 </script>
 
@@ -19,10 +23,11 @@ body {
   background-color:#40B883;
   margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
-.container {
-  width: 75%;
+/* .container {
+  width: 65%;
   margin: 0 auto;
-}
+} */
 </style>
