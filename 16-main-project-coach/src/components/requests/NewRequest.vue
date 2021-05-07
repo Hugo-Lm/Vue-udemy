@@ -44,7 +44,6 @@ export default {
           coachId: this.id,
         })
       })
-      this.$store.dispatch('fetchRequests')
       this.$router.push('/coaches')
     }
   }
