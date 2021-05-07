@@ -14,6 +14,7 @@ export default {
   },
   beforeMount() {
     this.$store.dispatch('fetchCoaches')
+    this.$store.dispatch('fetchRequests')
   },
 };
 </script>

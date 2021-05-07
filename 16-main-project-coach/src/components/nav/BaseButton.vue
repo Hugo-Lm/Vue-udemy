@@ -25,8 +25,11 @@ button {
 }
 
 button:hover {
+  transition: 0.5s ease-out;
+  background-color: #40B883;
   border: solid 2px black;
-  color: black;
+  color: white;
+  
 }
 
 a {

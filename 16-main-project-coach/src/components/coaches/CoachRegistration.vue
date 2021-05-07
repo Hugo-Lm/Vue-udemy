@@ -1,5 +1,6 @@
 <template>
-  <form action="/coaches" method="post" @submit.prevent="goBackToMenu">
+  <button @click="goBackToMenu">Back to coache's section</button>
+  <form action="/coaches" method="post">
     <div>
       <label for="firstName">First name :</label>
       <input type="text" id="firstName" v-model="firstName">
@@ -63,6 +64,9 @@ export default {
         })
       })
       this.$router.push('/coaches')
+    },
+    goBackToMenu() {
+      this.$router.push({ path: '/coaches' })
     }
   }
 }
