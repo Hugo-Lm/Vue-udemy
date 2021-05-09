@@ -5,15 +5,13 @@
       <base-button @click.prevent="fetchCoachesButton">Update coache's list</base-button>
       <base-button @click.prevent="addACoach">New coach?</base-button> 
     </div> 
-    <div>
-      <label for="expertiseFilter">Filter by expertise :</label>
-      <select name="expertiseFilter" id="expertiseFilter" v-model="expertiseFilterSelected">
-        <option value="all" selected>All</option>
-        <option value="workout">Workout</option>
-        <option value="cardio">Cardio</option>
-        <option value="nutrition">Nutrition</option>
-      </select>
-    </div>
+      <h2>Filter the coachs</h2>
+      <input type="checkbox" id="workout" checked @change="setExpertises"/>
+      <label for="workout">Workout</label>
+      <input type="checkbox" id="cardio" checked @change="setExpertises"/>
+      <label for="cardio">Cardio</label>
+      <input type="checkbox" id="nutrition" checked @change="setExpertises"/>
+      <label for="nutrition">Nutrition</label>
     <div v-for="coach of coaches" :key="coach.id"> 
       <coach-card 
         :id="coach.id"
@@ -35,7 +33,7 @@ export default {
   components: {CoachCard, BaseButton }, 
   data() {
     return {
-      expertiseFilterSelected: "all"
+      expertisesSelected: ["workout", "cardio", "nutrition"]
     }
   },
   methods: {
@@ -45,22 +43,28 @@ export default {
     },
     addACoach() {
       this.$router.push('/register')
+    },
+    setExpertises(event) {
+      if (event.target.checked) {
+        this.expertisesSelected.push(event.target.id)
+      } else {
+        const index = this.expertisesSelected.indexOf(event.target.id)
+        this.expertisesSelected.splice(index, 1)
+      }
     }
   },
   computed: {
     coaches() {
-      if (this.expertiseFilterSelected == "all") {
+      if (this.expertisesSelected.length == 3) {
         return this.$store.state.coaches.allCoaches;
       }
       else {
-        return this.$store.state.coaches.allCoaches.filter(coach => coach.expertises.includes(this.expertiseFilterSelected))
+        // return this.$store.state.coaches.allCoaches.filter(coach => coach.expertises.includes(this.expertisesSelected))
+        return this.$store.state.coaches.allCoaches.filter(coach => coach.expertises.find(expertise => this.expertisesSelected.includes(expertise)))
       }
     }
   },
   watch: {
-    expertiseFilterSelected() {
-      
-    }
   }
 }
 </script>

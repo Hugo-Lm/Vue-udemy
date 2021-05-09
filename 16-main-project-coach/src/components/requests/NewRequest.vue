@@ -1,19 +1,18 @@
 <template>
   <div class="requests-container">
-    <h2>New request</h2>
-    <h3>{{  }}</h3>
+    <h3>New request</h3>
     <button @click="backToHome">Retour au menu principal</button>
     <form action="/coaches" method="post">
-      <div>
+      <div :class="{ invalid: !pseudo.isValid }">
         <label for="pseudo">Pseudo :</label>
-        <input type="text" id="pseudo" v-model="pseudo">
+        <input type="text" id="pseudo" v-model="pseudo.val">
       </div>
-      <div>
+      <div :class="{ invalid: !message.isValid }">
         <label for="message">Message :</label>
-        <input type="textarea" id="message" v-model="message">
+        <input type="textarea" id="message" v-model="message.val">
       </div>
       <div>
-        <input type="submit" value="Register" @click="sendNewRequest">
+        <input type="submit" value="Register" @click.prevent="sendNewRequest">
       </div>
     </form>
   </div>
@@ -23,28 +22,52 @@
 export default {
   data() {
     return{
-      pseudo: '',
-      message: '',
-      id: this.$route.params.id
-      }
+      pseudo: {
+        val: '',
+        isValid: true
+      },
+      message: {
+        val: '',
+        isValid: true
+      },
+      id: this.$route.params.id,
+      validForm: true
+    }
   },
   methods:{
     backToHome() {
       this.$router.push('/coaches')
     },
+    validateForm() {
+      this.validForm = true
+      if (this.pseudo.val === "") {
+        this.pseudo.isValid = false;
+        this.validForm = false;
+      }
+      if (this.message.val === "") {
+        this.message.isValid = false;
+        this.validForm = false;
+      }
+    },
     sendNewRequest() {
-      fetch("https://udemy-vue-coach-project-default-rtdb.firebaseio.com/requests.json", {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-          pseudo: this.pseudo,
-          message: this.message,
-          coachId: this.id,
+      this.validateForm()
+      if (!this.validForm) {
+        return;
+      } 
+      else {
+        fetch("https://udemy-vue-coach-project-default-rtdb.firebaseio.com/requests.json", {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            pseudo: this.pseudo.val,
+            message: this.message.val,
+            coachId: this.id,
+          })
         })
-      })
-      this.$router.push('/coaches')
+        this.$router.push('/coaches')
+      }
     }
   }
 }
@@ -55,5 +78,13 @@ export default {
 .requests-container{
   width: 50%;
   margin: auto;
+  background-color: white;
+  border-radius: 5px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.invalid{
+  color: red;
 }
 </style>
